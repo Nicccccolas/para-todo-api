@@ -58,14 +58,14 @@ class UsersService {
   }
 
   //Return Instance if we do not converted to json (or raw:true)
-  async getUserOr404(id) {
+  async getUserByIdOr404(id) {
     let user = await models.Users.findByPk(id)
     if (!user) throw new CustomError('Not found User', 404, 'Not Found')
     return user
   }
 
   //Return not an Instance raw:true | we also can converted to Json instead
-  async getUser(id) {
+  async getUserById(id) {
     let user = await models.Users.findByPk(id, { raw: true })
     return user
   }
