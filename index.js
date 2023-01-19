@@ -1,6 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const helmet = require('helmet')
+const routerModels = require('./routes/models.router')
 require('dotenv').config()
 
 const app = express()
@@ -42,6 +43,16 @@ app.use(express.urlencoded({ extended: false }))
 Routes
 */
 
+app.get('/', ({ res }) => {
+  res.json({
+    api: 'API Join Momentum',
+    state: 'Up and Running',
+    version: '1.0.0'
+  })
+})
+
+
+routerModels(app)
 /* 
     Tell everyone the state of your api
 */
@@ -51,6 +62,8 @@ app.get('/', ({ res }) => {
     maintenance: false,
   })
 })
+
+
 
 app.listen(PORT, () => {
   console.log(`Server on PORT: ${PORT}`)

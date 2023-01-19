@@ -2,6 +2,7 @@ const models = require('../database/models/index')
 const { Op } = require('sequelize')
 const { CustomError } = require('../utils/custom-error')
 const {v4: uuid4} = require('uuid')
+const { hash } = require('../utils/crypto')
 
 class UsersService {
 
@@ -40,9 +41,9 @@ class UsersService {
         last_name: obj.last_name,
         email: obj.email,
         username: obj.username,
-        password: obj.password
+        password: hash(obj.password)
       }, { transaction })
-      const newProfile = await models.Profile.create({
+      const newProfile = await models.Profiles.create({
         id: uuid4(),
         user_id: newUser.id,
         image_url: obj.profile.image_url,
@@ -64,9 +65,12 @@ class UsersService {
     return user
   }
 
-  //Return not an Instance raw:true | we also can converted to Json instead
-  async getUserById(id) {
-    let user = await models.Users.findByPk(id, { raw: true })
+  
+
+  async getUserByEmail(email) {
+    let user = await models.Users.findOne({where: {
+      email: email
+    }})
     return user
   }
 

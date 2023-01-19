@@ -48,7 +48,7 @@ const addUser = (request, response) => {
   }
 }
 
-const getUser = async (request, response, next) => {
+const getUserById = async (request, response, next) => {
   try {
     let id = request.params.user_id
     let users = await usersService.getUserOr404(id)
@@ -126,7 +126,7 @@ const myVotes = async (request, response, next) => {
 module.exports = {
   getUsers,
   addUser,
-  getUser,
+  getUserById,
   updateUser,
   myPublications,
   myVotes,
