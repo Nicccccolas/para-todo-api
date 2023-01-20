@@ -1,3 +1,5 @@
+const { response } = require('express')
+const { request } = require('http')
 const PublicationsService = require('../services/publications.services')
 const { getPagination, getPagingData } = require('../utils/sequelize-utils')
 
@@ -66,6 +68,16 @@ const postVote = async (request, response, next) => {
   }
 }
 
+const getVotesByPublication = async (request, response, next) => {
+  try {
+    let publicationId = request.params.publication_id
+    let publication = await publicationsService.getVotesByPublicationId(publicationId)
+    return response.json({ results: publication })
+  } catch (error) {
+    next(error)
+  }
+}
+
 const removeVote = async (request, response, next) => {
   let publicationId = request.params.publication_id
   let profileId = request.user.id
@@ -80,7 +92,7 @@ const deletePublication = async (request, response, next) => {
   try {
     let publicacionId = request.params.publication_id
     const publication = await publicationsService.removePublication(publicacionId)
-    return response.json({results: publication, message: 'Publications deleted'}) 
+    return response.json({ results: publication, message: 'Publications deleted' })
   } catch (error) {
     next(error)
   }
@@ -91,6 +103,7 @@ module.exports = {
   postPublication,
   getPublicationById,
   postVote,
-  removeVote, 
+  getVotesByPublication,
+  removeVote,
   deletePublication
 }
