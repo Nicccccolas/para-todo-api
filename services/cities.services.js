@@ -1,4 +1,4 @@
-const models = require('../database/models/cities')
+const models = require('../database/models/index')
 
 class CitiesServices {
 

@@ -35,7 +35,7 @@ const options = {
 }
 module.exports = (passport) => passport.use(
   new JwtStrategy(options, (tokenDecoded, done) => {
-    userServices.getUserById(tokenDecoded.id)
+    userServices.getUserByIdOr404(tokenDecoded.id)
       .then((user) => {
         if (user) {
           done(null, tokenDecoded)

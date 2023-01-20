@@ -21,7 +21,7 @@ function routerModels(app) {
   app.use('/api/v1', router)
 
   router.post('/sign-up', addUser)
-  router.post('/login', routesLogin)
+  router.use('/login', routesLogin)
 
   router.get('/user-info', passport.authenticate('jwt', { session: false }), getInfoUser)
   router.get('/users', passport.authenticate('jwt', { session: false }), isAdmin, getUsers)

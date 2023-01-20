@@ -78,7 +78,7 @@ class UsersService {
     const transaction = await models.Users.sequelize.transaction()
     try {
       let user = await models.Users.findByPk(id)
-      let profile = await models.Users.findOne({where: {user_id: id}})
+      let profile = await models.Profiles.findOne({where: {user_id: id}})
 
       if (!user || !profile) throw new CustomError('Not found user', 404, 'Not Found')
 

@@ -1,10 +1,10 @@
-const RolesService = require('../services/roles.services')
+const StatesService = require('../services/states.services')
 
-const rolesService = new RolesService()
+const statesService = new StatesService()
 
 const getAllStates = async (request, response, next) => {
   try {
-    let states = await rolesService.getAllStates()
+    let states = await statesService.getAllStates()
     return response.json({ results: states })
   } catch (error) {
     next(error)
