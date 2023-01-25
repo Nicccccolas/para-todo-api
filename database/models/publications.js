@@ -13,11 +13,18 @@ module.exports = (sequelize, DataTypes) => {
       Publications.belongsTo(models.Cities, { as: 'cities', foreignKey: 'city_id' })
       Publications.belongsTo(models.Profiles, { as: 'profiles', foreignKey: 'profile_id' })
       Publications.belongsTo(models.Publications_Types, { as: 'publications_types', foreignKey: 'publication_type_id' })
-      Publications.hasMany(models.Votes, { as: 'votes', foreignKey: 'publication_id' })
+      Publications.belongsTo(models.Votes, { as: 'votes', foreignKey: 'profile_id' })
     }
   }
   Publications.init({
-    profile_id: DataTypes.UUID,
+    profile_id: {
+      type: DataTypes.UUID,
+      foreignKey: true,
+      references: {
+        model: 'Profiles',
+        key: 'id'
+      },
+    },
     publication_type_id: DataTypes.INTEGER,
     title: DataTypes.STRING,
     description: DataTypes.STRING,

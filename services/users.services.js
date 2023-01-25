@@ -1,7 +1,7 @@
 const models = require('../database/models/index')
 const { Op } = require('sequelize')
 const { CustomError } = require('../utils/custom-error')
-const {v4: uuid4} = require('uuid')
+const { v4: uuid4 } = require('uuid')
 const { hash } = require('../utils/crypto')
 
 class UsersService {
@@ -49,9 +49,9 @@ class UsersService {
         image_url: obj.profile.image_url,
         code_phone: obj.profile.code_phone,
         phone: obj.profile.phone
-      }, {transaction})
+      }, { transaction })
       await transaction.commit()
-      return {newUser, newProfile}
+      return { newUser, newProfile }
     } catch (error) {
       await transaction.rollback()
       throw error
@@ -65,12 +65,14 @@ class UsersService {
     return user
   }
 
-  
+
 
   async getUserByEmail(email) {
-    let user = await models.Users.findOne({where: {
-      email: email
-    }})
+    let user = await models.Users.findOne({
+      where: {
+        email: email
+      }
+    })
     return user
   }
 
@@ -78,7 +80,7 @@ class UsersService {
     const transaction = await models.Users.sequelize.transaction()
     try {
       let user = await models.Users.findByPk(id)
-      let profile = await models.Profiles.findOne({where: {user_id: id}})
+      let profile = await models.Profiles.findOne({ where: { user_id: id } })
 
       if (!user || !profile) throw new CustomError('Not found user', 404, 'Not Found')
 
@@ -87,20 +89,39 @@ class UsersService {
         last_name: obj.last_name,
         username: obj.username
       }, { transaction })
-      let updatedProfile 
-      if(Object.keys(obj).length == 5){
+      let updatedProfile
+      if (Object.keys(obj).length == 5) {
         updatedProfile = await profile.update({
           image_url: obj.profile.image_url,
           code_phone: obj.profile.code_phone,
           phone: obj.profile.phone
-        }, {transaction})
+        }, { transaction })
       }
       await transaction.commit()
-      return {updatedUser, updatedProfile}
+      return { updatedUser, updatedProfile }
     } catch (error) {
       await transaction.rollback()
       throw error
     }
+  }
+
+  async updatePasswordUser(id, obj) {
+    const transaction = await models.Users.sequelize.transaction()
+    try {
+      let user = await models.Users.findByPk(id)
+      if (!user) throw new CustomError('Not found user', 404, 'Not Found')
+
+      let updatePasswordUser = await user.update({
+        password: obj.password
+      }, {transaction})
+      await transaction.commit()
+      return updatePasswordUser[0]
+    } catch (error) {
+      await transaction.rollback()
+      throw error
+    }
+    
+
   }
 
   async getPublicationsOfUser(id) {

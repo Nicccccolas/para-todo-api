@@ -16,13 +16,13 @@ const {
 
 
 router.post('/', postPublication)
-router.get('/', isAdmin, getPublications)
+router.get('/', getPublications)
 
-router.get('/publication_id', getPublicationById)
-router.delete('/:publication_id/vote', deletePublication)
+router.get('/:publication_id', getPublicationById)
+router.delete('/:publication_id', deletePublication)
 router.post('/:publication_id/vote', hasUserVoted, postVote)
 router.delete('/:publication_id/vote', removeVote)
-router.get('/publication_id/vote', getVotesByPublication)
+router.get('/:publication_id/vote', getVotesByPublication)
 
 
 module.exports = router

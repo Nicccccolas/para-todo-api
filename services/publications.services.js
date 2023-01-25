@@ -1,5 +1,5 @@
 const { v4: uuid4 } = require('uuid')
-const models = require('../database/models/index')
+const models = require('../database/models')
 const { Op } = require('sequelize')
 const { CustomError } = require('../utils/custom-error')
 
@@ -92,19 +92,14 @@ class PublicationsServices {
       throw error
     }
   }
-  
-  async getVotesByPublicationId(id) {
-    const votes = await models.Votes.findAll({ where: { publication_id: id } })
-    return votes
-  }
 
   async postVotesByPublication(id, publicationId) {
     const transaction = await models.Votes.sequelize.transaction()
     try {
-      const profileId = await models.Profiles.findOne({ where: { user_id: id } })
+      const profile = await models.Profiles.findOne({ where: { user_id: id } })
       let vote = await models.Votes.create({
         publication_id: publicationId,
-        profile_id: profileId.id
+        profile_id: profile.id
       }, { transaction })
       await transaction.commit()
       return vote
@@ -114,6 +109,8 @@ class PublicationsServices {
       throw error
     }
   }
+  
+  
   async removeVotesByPublication(id, publicationId) {
     const transaction = await models.Votes.sequelize.transaction()
     try {

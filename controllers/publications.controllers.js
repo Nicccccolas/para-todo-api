@@ -1,5 +1,3 @@
-const { response } = require('express')
-const { request } = require('http')
 const PublicationsService = require('../services/publications.services')
 const { getPagination, getPagingData } = require('../utils/sequelize-utils')
 
@@ -23,29 +21,28 @@ const getPublications = async (request, response, next) => {
   }
 }
 
-const postPublication = async (request, response, next) => {
-  let profileId = request.user.id
+const postPublication = async (request, response) => {
+  let profile_id = request.user.id
   let { publication_type_id, title, description, content, picture, city_id, image_url } = request.body
-  {
-    try {
-      const newPublication = await publicationsService.createPublication(profileId, { publication_type_id, title, description, content, picture, city_id, image_url })
-      return response.json({ results: newPublication })
-    } catch (error) {
-      next(error, {
-        fields: {
-          publication_type_id: 'INTEGER',
-          title: 'STRING',
-          description: 'STRING',
-          content: 'STRING',
-          picture: 'STRING',
-          city_id: 'INTEGER',
-          image_url: 'STRING'
-        }
-      })
-    }
+  if (profile_id && publication_type_id && title && description && content && picture && city_id, image_url) {
+    await publicationsService.createPublication(profile_id, { publication_type_id, title, description, content, picture, city_id, image_url })
+      .then(data => response.status(201).json(data))
+      .catch(err => response.status(400).json({ message: err.message }))
+  }
+  else {
+    response.status(400).json({
+      message: 'All fields are required', fields: {
+        publication_type_id: 'INTEGER',
+        title: 'STRING',
+        description: 'STRING',
+        content: 'STRING',
+        picture: 'STRING',
+        city_id: 'INTEGER',
+        image_url: 'STRING'
+      }
+    })
   }
 }
-
 const getPublicationById = async (request, response, next) => {
   try {
     let publicationId = request.params.publication_id
